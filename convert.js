@@ -45,9 +45,8 @@ module.exports = {
         return dt
     },
 
-    format: (data, scale) => {
+    format: (data, scale, loc) => {
         var arr = data.export();
-        console.log(arr.name);
 
         if (arr.text) {
 
@@ -147,7 +146,7 @@ module.exports = {
             cropY: 0,
             crossOrigin: null,
             filters: [],
-            src: data.get("image"),
+            src: "",
         };
         return dt;
         // }
