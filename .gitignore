@@ -52,6 +52,7 @@ build/Release
 node_modules/
 jspm_packages/
 psd/
+output/
 
 # TypeScript v1 declaration files
 

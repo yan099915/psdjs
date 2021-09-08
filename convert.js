@@ -1,4 +1,8 @@
 const PSD = require('psd');
+const fs = require('fs');
+const path = require('path');
+
+
 
 module.exports = {
     define: (width, height) => {
@@ -45,7 +49,7 @@ module.exports = {
         return dt
     },
 
-    format: (data, scale, loc) => {
+    format: (data, scale) => {
         var arr = data.export();
 
         if (arr.text) {
@@ -109,17 +113,16 @@ module.exports = {
 
             return dt;
         }
-        // if (arr.image) {
-        //     console.log(arr.name);
+
         var dt = {
             type: "image",
             version: "4.1.0",
             originX: "left",
             originY: "top",
-            left: arr.left,
-            top: arr.top,
-            width: arr.width,
-            height: arr.height,
+            left: 0,
+            top: 0,
+            width: 100,
+            height: 100,
             fill: "rgb(0,0,0)",
             stroke: `rgb(0,0,0)`,
             strokeWidth: null,
@@ -146,7 +149,7 @@ module.exports = {
             cropY: 0,
             crossOrigin: null,
             filters: [],
-            src: "",
+            src: data.get("image").toBase64(scale)
         };
         return dt;
         // }

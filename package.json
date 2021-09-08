@@ -2,9 +2,10 @@
   "name": "psdjs",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "convert.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
   },
   "repository": {
     "type": "git",
@@ -17,8 +18,13 @@
   },
   "homepage": "https://github.com/yan099915/psdjs#readme",
   "dependencies": {
-    "nodejs-base64-converter": "^1.0.5",
-    "nodemon": "^2.0.12",
-    "psd": "^3.2.0"
+    "base-64": "^1.0.0",
+    "btoa": "^1.2.1",
+    "fabric": "^4.6.0",
+    "flatted": "^3.2.2",
+    "js-base64": "^3.6.1",
+    "json-circular-stringify": "^1.0.1",
+    "psd": "^3.2.0",
+    "utf8": "^3.0.0"
   }
 }

@@ -2,26 +2,26 @@ const PSD = require('psd');
 const fs = require('fs');
 const path = require('path');
 const { parse, stringify, toJSON, fromJSON } = require('flatted');
-const fs = require('fs')
 const fabric = require('fabric').fabric
 
 
-const psd = PSD.fromFile("./health_life_1_4_.psd");
+const psd = PSD.fromFile("./psd/health_life_1_4_.psd");
 const application = require('./convert')
 const filename = "health_life_1_4_"
 
-async function toImg(data) {
-    var canvas = new fabric.Canvas('canvas');
-    var imgElement = document.getElementsByClassName('imgSrc')[0];
-    var imgInstance = new fabric.Image(imgElement, {
-        left: 100,
-        top: 100,
-        scaleX: 200 / imgElement.width,
-        scaleY: 200 / imgElement.height
+async function toImg(json, w, h) {
+    // initialize fabric canvas and assign to global windows object for debug
+    var canvas = new fabric.Canvas('c');
+
+    // canvas.setHeight(h);
+    // canvas.setWidth(w);
+
+    canvas.loadFromJSON(json, canvas.renderAll.bind(canvas), function (o, object) {
+        fabric.log(o, object);
     });
 
-    canvas.add(imgInstance);
-    canvas.toDataURL("png")
+    var dataURL = canvas.toDataURL('png');
+    console.log(dataURL);
 }
 
 async function convertPSD(file) {
@@ -54,11 +54,11 @@ async function convertPSD(file) {
             let cdesc = children[i].descendants().length;
             let bg = children[i].descendants()[cdesc - 1].get("name") // descendants terakhir dari child tree
 
-            console.log(name);
+            // console.log(name);
 
             for (b = 0; b < qty; b++) {
                 let grandchild = children[i]._children[b]
-                console.log(grandchild._children.length);
+                // console.log(grandchild._children.length);
 
                 let count = 0;
                 let count2 = 0;
@@ -80,8 +80,6 @@ async function convertPSD(file) {
                             const assets = await fs.mkdir(`./output/${filename}/assets`, { recursive: true }, function (err) {
                                 if (err) {
                                     console.log(err)
-                                } else {
-                                    console.log(`New directory successfully created.`)
                                 }
                             })
                             grandchild._children[d].saveAsPng(`./output/${filename}/assets/${content}.png`).then(function () {
@@ -95,30 +93,31 @@ async function convertPSD(file) {
                             let img = grandchild._children[e].get("name");
                             let imgObject = application.format(grandchild._children[e], sc); // ubah data grandchild menjadi format fabricjs
                             let imgLocation = "./output/" + filename + "/assets/" + imgObject + ".png"
+                            let a = grandchild._children[e].get("image");
 
-                            // console.log(img, "cek " + e);
+                            // console.log(img, "cek");
 
                             const assets = await fs.mkdir(`./output/${filename}/assets`, { recursive: true }, function (err) {
                                 if (err) {
                                     console.log(err)
-                                } else {
-                                    console.log(`New directory successfully created.`)
                                 }
                             })
-                            file.objects.push(imgObject, sc);
 
-                            // grandchild._children[e].saveAsPng(`./output/${filename}/assets/${imgObject}.png`).then(function () {
-                            //     console.log(`Exported!`);
-                            // });
+                            const abc = toImg(JSON.stringify(imgObject), w, h);
+                            file.objects.push(imgObject);
+
+                            grandchild._children[e].saveAsPng(`./output/${filename}/assets/${imgObject}.png`).then(function () {
+                                console.log(`Exported!`);
+                            });
                         }
                     }
                 }
             }
             //masukan bg kedalam background
             file.backgroundImage.src = bg;
-        }
-        console.log(file);
 
+        }
+        // console.log(file);
         fs.writeFileSync(path.resolve(`./output/${filename}`, `${name}.json`), JSON.stringify(file));
     }
 }
