@@ -1,6 +1,7 @@
 const PSD = require('psd');
 const fs = require('fs');
 const path = require('path');
+const base64 = require('base-64')
 
 
 
@@ -49,8 +50,8 @@ module.exports = {
         return dt
     },
 
-    format: (data, scale) => {
-        var arr = data.export();
+    format: (arr, scale, loc) => {
+        // var arr = data.export();
 
         if (arr.text) {
 
@@ -109,8 +110,6 @@ module.exports = {
                 charSpacing: 0,
                 styles: {},
             };
-            // console.log(dt);
-
             return dt;
         }
 
@@ -119,10 +118,10 @@ module.exports = {
             version: "4.1.0",
             originX: "left",
             originY: "top",
-            left: 0,
-            top: 0,
-            width: 100,
-            height: 100,
+            left: arr.left,
+            top: arr.top,
+            width: arr.width,
+            height: arr.height,
             fill: "rgb(0,0,0)",
             stroke: `rgb(0,0,0)`,
             strokeWidth: null,
@@ -149,9 +148,46 @@ module.exports = {
             cropY: 0,
             crossOrigin: null,
             filters: [],
-            src: data.get("image").toBase64(scale)
+            src: loc
         };
         return dt;
-        // }
-    }
+    },
+
+    group: (w) => {
+        var group = {
+            "type": "group",
+            "version": "4.4.0",
+            "originX": "center",
+            "originY": "center",
+            "left": 250,
+            "top": 1320,
+            "width": 200,
+            "height": 50,
+            "fill": "rgb(0,0,0)",
+            "stroke": null,
+            "strokeWidth": 0,
+            "strokeDashArray": null,
+            "strokeLineCap": "butt",
+            "strokeDashOffset": 0,
+            "strokeLineJoin": "miter",
+            "strokeUniform": false,
+            "strokeMiterLimit": 4,
+            "scaleX": 1,
+            "scaleY": 1,
+            "angle": 0,
+            "flipX": false,
+            "flipY": false,
+            "opacity": 1,
+            "shadow": null,
+            "visible": true,
+            "backgroundColor": "",
+            "fillRule": "nonzero",
+            "paintFirst": "fill",
+            "globalCompositeOperation": "source-over",
+            "skewX": 0,
+            "skewY": 0,
+            "objects": []
+        }
+        return group
+    },
 };
