@@ -44,7 +44,8 @@ module.exports = {
                 cropX: 0,
                 cropY: 0,
                 crossOrigin: "anonymous",
-                filters: []
+                filters: [],
+                src: ""
             }
         };
         return dt
@@ -155,39 +156,53 @@ module.exports = {
 
     group: (w) => {
         var group = {
-            "type": "group",
-            "version": "4.4.0",
-            "originX": "center",
-            "originY": "center",
-            "left": 250,
-            "top": 1320,
-            "width": 200,
-            "height": 50,
-            "fill": "rgb(0,0,0)",
-            "stroke": null,
-            "strokeWidth": 0,
-            "strokeDashArray": null,
-            "strokeLineCap": "butt",
-            "strokeDashOffset": 0,
-            "strokeLineJoin": "miter",
-            "strokeUniform": false,
-            "strokeMiterLimit": 4,
-            "scaleX": 1,
-            "scaleY": 1,
-            "angle": 0,
-            "flipX": false,
-            "flipY": false,
-            "opacity": 1,
-            "shadow": null,
-            "visible": true,
-            "backgroundColor": "",
-            "fillRule": "nonzero",
-            "paintFirst": "fill",
-            "globalCompositeOperation": "source-over",
-            "skewX": 0,
-            "skewY": 0,
-            "objects": []
-        }
+            type: "group",
+            version: "4.4.0",
+            originX: "center",
+            originY: "center",
+            left: 250,
+            top: 1320,
+            width: 200,
+            height: 50,
+            fill: "rgb(0,0,0)",
+            stroke: null,
+            strokeWidth: 0,
+            strokeDashArray: null,
+            strokeLineCap: "butt",
+            strokeDashOffset: 0,
+            strokeLineJoin: "miter",
+            strokeUniform: false,
+            strokeMiterLimit: 4,
+            scaleX: 1,
+            scaleY: 1,
+            angle: 0,
+            flipX: false,
+            flipY: false,
+            opacity: 1,
+            shadow: null,
+            visible: true,
+            backgroundColor: "",
+            fillRule: "nonzero",
+            paintFirst: "fill",
+            globalCompositeOperation: "source-over",
+            skewX: 0,
+            skewY: 0,
+            objects: [],
+        };
         return group
     },
+
+    savePng: (layer, loc) => {
+        layer.saveAsPng(loc).catch(function (err) {
+            console.log(err.stack);
+        });
+    },
+
+    saveJson: (file, filename, name) => {
+        fs.writeFile(path.resolve("./output/" + filename + "/" + name + ".json"), JSON.stringify(file), function (err) {
+            if (err) {
+                console.log(err)
+            }
+        })
+    }
 };

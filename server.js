@@ -5,8 +5,8 @@ const application = require('./convert')
 
 
 
-const psd = PSD.fromFile("./psd/nature_look_12_16.");
-const filename = "nature_look_12_16"
+const psd = PSD.fromFile("./psd/health_life_1_4_.psd");
+const filename = "health_life_1_4_"
 
 
 
@@ -30,6 +30,7 @@ async function convertPSD(file) {
         var grouping = application.group();
         var toplayer = children[i].descendants();
 
+
         for (j = 0; j < toplayer.length; j++) {
             if (toplayer[j].isGroup()) {
                 var folder = toplayer[j].path();
@@ -42,30 +43,31 @@ async function convertPSD(file) {
                 var object = toplayer[j].export()
                 if (!object.text) {
                     var objectName = toplayer[j].get("name");
-                    var loc = "./output/" + objectName + ".png";
-                    // console.log(loc);
+                    var imgLoc = "./output/" + filename + "/" + folder + "/" + objectName + ".png";
 
-                    toplayer[j].saveAsPng("./output/" + filename + "/" + folder + "/" + objectName + ".png").catch(function (err) {
-                        console.log(err.stack);
-                    });
-                    const otherObject = application.format(object, sc, loc);
-                    // console.log(grouping.objects);
-
-                    grouping.objects.push(otherObject);
+                    const otherObject = await application.format(object, sc, imgLoc);
+                    if (j == toplayer.length - 1) {
+                        console.log(toplayer[j].get("name"));
+                        console.log(imgLoc);
+                        file.backgroundImage.src = imgLoc;
+                    } else {
+                        grouping.objects.push(otherObject);
+                    }
+                    const saveImg = await application.savePng(toplayer[j], imgLoc);
                 } else {
                     var textName = toplayer[j].get("name");
+                    var textLoc = "./output/" + filename + "/" + folder + "/" + textName + ".png";
 
-                    toplayer[j].saveAsPng("./output/" + filename + "/" + folder + "/" + textName + ".png").catch(function (err) {
-                        console.log(err.stack);
-                    });
+                    const saveTxt = await application.savePng(toplayer[j], textLoc);
 
-                    const textObject = application.format(object, sc)
+                    const textObject = await application.format(object, sc)
                     file.objects.push(textObject, sc);
                 }
             }
         }
         file.objects.push(grouping, sc);
-        fs.writeFile(path.resolve("./output/" + filename + "/" + name + ".json"), JSON.stringify(file));
+        const json = await application.saveJson(file, filename, name);
+        // fs.writeFile(path.resolve("./output/" + filename + "/" + name + ".json"), JSON.stringify(file));
     }
 }
 convertPSD()
